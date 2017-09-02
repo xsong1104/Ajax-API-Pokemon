@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Pokemon2</title>
+        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+        <style type="text/css">
+            #main{
+                display: inline-block;
+                width: 70%;
+            }
+            #info{
+                vertical-align: top;
+                display: inline-block;
+                width: 25%;
+                padding-left: 10px;
+            }
+            #photo{
+                vertical-align: top;
+                text-align: center;
+            }
+       </style>
+
+    </head>
+    <body>
+        <div id="main">
+        </div>
+        <div id="info">
+            <h2></h2>
+            <div id="photo"></div>
+            <p></p>
+        </div>
+
+        <script>
+            $(document).ready(function(){
+                for(var i = 1; i <= 151; i++){
+                    //var newDiv = "<div class='card'><h3>" + i +"</h3>" +"<br>" + "<p>Click for description!</p></div>";
+                    //var image1 = "<img src=http://pokeapi.co/media/img/" + i + ".png>"
+                    var image0= "<img id=" + i + " src=http://pokeapi.co/media/img/" + i +".png>";
+                    $("#main").append(image0);
+                };
+
+
+                $(document).on('click', 'img', function(){
+
+                    var id = $(this).attr('id');
+                    $.get("http://pokeapi.co/api/v1/pokemon/" + id+ "/", function(res) {
+                        $("h2").html(res.name);
+                    }, "json");
+
+                    $("#photo").html("<img src=http://pokeapi.co/media/img/" + id + ".png>");
+
+                    $.get("http://pokeapi.co/api/v1/pokemon/"+ id +"/", function(res) {
+                        var html_str = "";
+                        html_str += "<h4>Types</h4>";
+                        html_str += "<ul>";
+                        for(var i = 0; i < res.types.length; i++) {
+                            html_str += "<li>" + res.types[i].name + "</li>";
+                        }
+                        html_str += "</ul>";
+                        var height = "<h4>Height</h4><p>" + res.height + "</p>";
+                        var weight = "<h4>Height</h4><p>" + res.weight + "</p>";
+                        $("p").html(html_str + height + weight);
+                        $('#info').css("border", "5px solid red");
+                    }, "json");
+
+                });
+
+
+            })
+        </script>
+    </body>
+</html>
